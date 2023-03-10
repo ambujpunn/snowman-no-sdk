@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BranchSDK
 
 /**
  Header views for accessories. Was used with collection views before table views were implemented.
@@ -295,6 +296,11 @@ extension SMSnowmanView: UITableViewDelegate
         
         // Select this accessory.
         selectAccessory(accessory)
+        
+        // Log custom Branch event
+        let event = BranchEvent.customEvent(withName: "selected_accessory")
+        event.customData["accessory"] = accessory.name
+        event.logEvent()
     }
 }
 
