@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BranchSDK
 
 /**
  Header views for accessories. Was used with collection views before table views were implemented.

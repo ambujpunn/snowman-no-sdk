@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import BranchSDK
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -17,6 +18,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
+        
+        // workaround for SceneDelegate continueUserActivity or openURLContexts not getting called on cold start
+        if let userActivity = connectionOptions.userActivities.first {
+            BranchScene.shared().scene(scene, continue: userActivity)
+        }
+        else if !connectionOptions.urlContexts.isEmpty {
+            BranchScene.shared().scene(scene, openURLContexts: connectionOptions.urlContexts)
+        }
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -48,5 +58,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
 
+}
+
+// Deeplink triggers for URI Scheme and Universal Links
+extension SceneDelegate {
+    
+    /// Universal Links Trigger
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        BranchScene.shared().scene(scene, continue: userActivity)
+    }
+    
+    /// URI Scheme Trigger
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        BranchScene.shared().scene(scene, openURLContexts: URLContexts)
+    }
+    
 }
 

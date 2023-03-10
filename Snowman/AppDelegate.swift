@@ -6,14 +6,25 @@
 //
 
 import UIKit
+import BranchSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var linkProperties: BranchLinkProperties?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        BranchScene.shared().initSession(launchOptions: launchOptions) { params, error, scene in
+            if let error = error {
+                print(error)
+            }
+            else {
+                // Doesn't capture custom link data
+                self.linkProperties = BranchLinkProperties.getFrom(params)
+                print(params)
+            }
+        }
         return true
     }
 
